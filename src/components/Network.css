@@ -1,0 +1,108 @@
+.network-section {
+  padding: 80px 0;
+}
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.partner-card {
+  text-align: center;
+  padding: 2rem;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--border-radius-lg);
+  transition: all 0.2s ease;
+  background-color: #F8FAFC;
+}
+
+.partner-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+  border-color: #CBD5E1;
+  background-color: var(--color-white);
+}
+
+.partner-icon {
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.partner-card:hover .partner-icon {
+  color: var(--color-primary);
+}
+
+.partner-name {
+  font-size: 1.125rem;
+  margin-bottom: 0.25rem;
+  color: var(--color-text-main);
+}
+
+.partner-type {
+  font-size: 0.875rem;
+  color: #10B981; /* Trust green */
+  font-weight: 500;
+}
+
+.volunteer-cta {
+  background: linear-gradient(135deg, var(--color-secondary) 0%, #004CDE 100%);
+  border-radius: var(--border-radius-lg);
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-white);
+  box-shadow: 0 10px 25px -5px rgba(0, 102, 255, 0.4);
+}
+
+.volunteer-content {
+  max-width: 600px;
+}
+
+.volunteer-content h3 {
+  color: var(--color-white);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.volunteer-content p {
+  font-size: 1.125rem;
+  opacity: 0.9;
+}
+
+.volunteer-btn {
+  background-color: var(--color-white);
+  color: var(--color-secondary);
+  border: none;
+  font-size: 1.125rem;
+  padding: 1rem 2rem;
+}
+
+.volunteer-btn:hover {
+  background-color: #F1F5F9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 992px) {
+  .partners-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .volunteer-cta {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .partners-grid {
+    grid-template-columns: 1fr;
+  }
+  .volunteer-content h3 {
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,109 @@
+.verify-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--color-bg-main);
+  background-image: radial-gradient(circle at center, rgba(10, 37, 64, 0.05) 0%, transparent 100%);
+  padding: 1rem;
+}
+
+.verify-card {
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 3rem 2.5rem;
+  border: 1px solid #E2E8F0;
+  text-align: center;
+}
+
+.verify-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  background-color: #F1F5F9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: var(--color-secondary);
+}
+
+.verify-header h2 {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.verify-header p {
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.otp-container {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.otp-input {
+  width: 48px;
+  height: 56px;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background-color: #F8FAFC;
+  transition: all 0.2s ease;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+  background-color: var(--color-white);
+}
+
+.verify-btn {
+  justify-content: center;
+  padding: 1rem;
+  font-size: 1.125rem;
+}
+
+.verify-btn:disabled {
+  background-color: #CBD5E1;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.verify-footer {
+  margin-top: 2rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.verify-footer a {
+  color: var(--color-secondary);
+  font-weight: 600;
+}
+
+.verify-footer a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 576px) {
+  .otp-container {
+    gap: 0.5rem;
+  }
+  .otp-input {
+    width: 40px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+}
