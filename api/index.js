@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const nodemailer = require('nodemailer');
+import express from 'express';
+import cors from 'cors';
+import nodemailer from 'nodemailer';
 
 const app = express();
 app.use(cors());
@@ -129,5 +129,13 @@ app.post('/api/reports', (req, res) => {
   res.json({ success: true, report: newReport });
 });
 
+// Local Development Server (skipped on Vercel)
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`Local backend running on port ${PORT}`);
+  });
+}
+
 // Export the Express app for Vercel Serverless compatibility
-module.exports = app;
+export default app;
