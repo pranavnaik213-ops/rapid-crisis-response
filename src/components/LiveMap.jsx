@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Filter, Activity, ShieldAlert, HeartPulse } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import MarkerClusterGroup from 'react-leaflet-cluster';
 import L from 'leaflet';
 import { renderToString } from 'react-dom/server';
 import 'leaflet/dist/leaflet.css';
@@ -84,37 +85,48 @@ const LiveMap = ({ incidents }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
               <LocationMarker />
-              {incidents.filter(inc => filter === 'all' || inc.type === filter).map(inc => {
-                let Icon = Activity;
-                if (inc.type === 'rescue') Icon = HeartPulse;
-                if (inc.type === 'safety') Icon = ShieldAlert;
-                if (inc.type === 'medical') Icon = MapPin;
-                
-                return (
-                  <Marker 
-                    key={inc.id} 
-                    position={[inc.lat, inc.lng]}
-                    icon={createCustomIcon(Icon, inc.severity)}
-                  >
-                    <Popup>
-                      <div style={{ padding: '4px', maxWidth: '200px' }}>
-                        {inc.imageUrl && (
-                          <img 
-                            src={inc.imageUrl} 
-                            alt="Incident Evidence" 
-                            style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '8px', marginBottom: '8px' }} 
-                          />
-                        )}
-                        <strong style={{ fontSize: '14px', color: '#0A2540' }}>{inc.title}</strong><br/>
-                        <span style={{ color: '#64748B', fontSize: '12px' }}>{inc.location} • {inc.time}</span><br/>
-                        <span style={{ textTransform: 'capitalize', fontWeight: 'bold', color: inc.severity === 'critical' ? '#E63946' : inc.severity === 'high' ? '#F4A261' : '#0066FF' }}>
-                          {inc.severity} Severity
-                        </span>
-                      </div>
-                    </Popup>
-                  </Marker>
-                );
-              })}
+              <MarkerClusterGroup
+                chunkedLoading
+                polygonOptions={{
+                  fillColor: '#ef4444',
+                  color: '#dc2626',
+                  weight: 2,
+                  opacity: 0.5,
+                  fillOpacity: 0.2
+                }}
+              >
+                {incidents.filter(inc => filter === 'all' || inc.type === filter).map(inc => {
+                  let Icon = Activity;
+                  if (inc.type === 'rescue') Icon = HeartPulse;
+                  if (inc.type === 'safety') Icon = ShieldAlert;
+                  if (inc.type === 'medical') Icon = MapPin;
+                  
+                  return (
+                    <Marker 
+                      key={inc.id} 
+                      position={[inc.lat, inc.lng]}
+                      icon={createCustomIcon(Icon, inc.severity)}
+                    >
+                      <Popup>
+                        <div style={{ padding: '4px', maxWidth: '200px' }}>
+                          {inc.imageUrl && (
+                            <img 
+                              src={inc.imageUrl} 
+                              alt="Incident Evidence" 
+                              style={{ width: '100%', height: '120px', objectFit: 'cover', borderRadius: '8px', marginBottom: '8px' }} 
+                            />
+                          )}
+                          <strong style={{ fontSize: '14px', color: '#0A2540' }}>{inc.title}</strong><br/>
+                          <span style={{ color: '#64748B', fontSize: '12px' }}>{inc.location} • {inc.time}</span><br/>
+                          <span style={{ textTransform: 'capitalize', fontWeight: 'bold', color: inc.severity === 'critical' ? '#E63946' : inc.severity === 'high' ? '#F4A261' : '#0066FF' }}>
+                            {inc.severity} Severity
+                          </span>
+                        </div>
+                      </Popup>
+                    </Marker>
+                  );
+                })}
+              </MarkerClusterGroup>
             </MapContainer>
           </div>
 

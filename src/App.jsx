@@ -13,6 +13,8 @@ import SignUp from './components/SignUp';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import Navbar from './components/Navbar';
+import SOSButton from './components/SOSButton';
+import UserDashboard from './components/UserDashboard';
 import './App.css';
 
 function App() {
@@ -147,7 +149,15 @@ function App() {
         <HowItWorks />
         <LiveMap incidents={incidents} />
         {authState === 'authenticated' ? (
-          <ReportForm addIncident={addIncident} />
+          <>
+            <div className="section-header" style={{ textAlign: 'center', marginTop: '4rem' }}>
+              <h2>Emergency Actions</h2>
+              <p>Quickly dispatch an SOS or submit a detailed incident report.</p>
+            </div>
+            <SOSButton addIncident={addIncident} />
+            <ReportForm addIncident={addIncident} />
+            <UserDashboard incidents={incidents} userEmail={userEmail} />
+          </>
         ) : (
           <div className="container" style={{ padding: '4rem 2rem', textAlign: 'center', backgroundColor: '#F8FAFC', borderRadius: '12px', margin: '2rem auto', maxWidth: '800px', border: '1px dashed #CBD5E1' }}>
             <h3 style={{ color: '#0A2540', marginBottom: '1rem' }}>Log in to Report an Emergency</h3>

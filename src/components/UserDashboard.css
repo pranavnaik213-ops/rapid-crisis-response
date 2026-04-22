@@ -1,0 +1,140 @@
+.user-dashboard-container {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 3rem auto;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid #E2E8F0;
+}
+
+.dashboard-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.dashboard-header h3 {
+  margin: 1rem 0 0.5rem;
+  color: #0F172A;
+  font-size: 1.5rem;
+}
+
+.dashboard-header p {
+  color: #64748B;
+  margin: 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #94A3B8;
+  font-style: italic;
+  background: #F8FAFC;
+  border-radius: 8px;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 9px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #E2E8F0;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 2rem;
+}
+
+.timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -2rem;
+  background: white;
+  border-radius: 50%;
+  padding: 2px;
+  box-shadow: 0 0 0 4px white;
+}
+
+.timeline-content {
+  background: #F8FAFC;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.timeline-content:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.timeline-date {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #64748B;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+.timeline-title {
+  margin: 0 0 0.5rem 0;
+  color: #0F172A;
+  font-size: 1.125rem;
+}
+
+.timeline-location {
+  margin: 0 0 1rem 0;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+.timeline-tags {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tag {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.type-tag {
+  background: #F1F5F9;
+  color: #475569;
+}
+
+.severity-tag.critical {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.severity-tag.high {
+  background: #FFEDD5;
+  color: #EA580C;
+}
+
+.severity-tag.medium, .severity-tag.low {
+  background: #DBEAFE;
+  color: #2563EB;
+}
