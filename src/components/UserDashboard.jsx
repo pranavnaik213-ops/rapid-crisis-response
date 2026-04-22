@@ -1,8 +1,17 @@
-import React from 'react';
-import { Clock, CheckCircle, AlertTriangle, ShieldAlert } from 'lucide-react';
+import React, { useState } from 'react';
+import { Clock, CheckCircle, AlertTriangle, ShieldAlert, Phone } from 'lucide-react';
 import './UserDashboard.css';
 
 const UserDashboard = ({ incidents, userEmail }) => {
+  const [contact, setContact] = useState(localStorage.getItem(`em_contact_${userEmail}`) || '');
+  const [saved, setSaved] = useState(false);
+
+  const handleSaveContact = () => {
+    localStorage.setItem(`em_contact_${userEmail}`, contact);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
   const userIncidents = incidents.filter(inc => inc.reportedBy === userEmail);
 
   return (
@@ -11,6 +20,29 @@ const UserDashboard = ({ incidents, userEmail }) => {
         <ShieldAlert size={28} color="#0066FF" />
         <h3>My Incident History</h3>
         <p>Timeline of all emergencies you have reported.</p>
+      </div>
+
+      <div className="emergency-contact-section">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+          <Phone size={18} color="#475569" />
+          <h4 style={{ margin: 0, color: '#0F172A' }}>Emergency Contact</h4>
+        </div>
+        <p style={{ fontSize: '0.9rem', color: '#64748B', marginBottom: '1rem' }}>
+          We will automatically notify this number via SMS if you trigger the SOS button.
+        </p>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <input 
+            type="tel" 
+            placeholder="+1 (555) 000-0000" 
+            className="form-control" 
+            style={{ flex: 1 }}
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+          />
+          <button className="btn btn-secondary" onClick={handleSaveContact}>
+            {saved ? 'Saved!' : 'Save'}
+          </button>
+        </div>
       </div>
 
       {userIncidents.length === 0 ? (

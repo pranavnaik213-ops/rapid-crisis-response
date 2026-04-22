@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { AlertTriangle, MapPin, CheckCircle, Loader } from 'lucide-react';
 import './SOSButton.css';
 
-const SOSButton = ({ addIncident }) => {
+const SOSButton = ({ addIncident, userEmail }) => {
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState('');
+  const savedContact = localStorage.getItem(`em_contact_${userEmail}`);
 
   const handleSOS = () => {
     setStatus('loading');
@@ -64,6 +65,11 @@ const SOSButton = ({ addIncident }) => {
         <div className="sos-status success">
           <CheckCircle size={32} />
           <p>SOS Dispatched Successfully.</p>
+          {savedContact && (
+            <p style={{ fontSize: '0.9rem', color: '#64748B', marginTop: '-0.5rem' }}>
+              Auto-SMS sent to {savedContact}
+            </p>
+          )}
         </div>
       )}
 

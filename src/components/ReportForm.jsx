@@ -1,12 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Camera, MapPin, AlertTriangle, CheckCircle, Upload } from 'lucide-react';
+import { Camera, MapPin, AlertTriangle, CheckCircle, Upload, Mic, MicOff, Bot } from 'lucide-react';
 import './ReportForm.css';
+
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+if (recognition) {
+  recognition.continuous = false;
+  recognition.interimResults = false;
+}
 
 const ReportForm = ({ addIncident }) => {
   const [submitted, setSubmitted] = useState(false);
   const [locationValue, setLocationValue] = useState('');
   const [detectedCoords, setDetectedCoords] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [description, setDescription] = useState('');
+  const [isListening, setIsListening] = useState(false);
+  const [isAILoading, setIsAILoading] = useState(false);
+  const [selectedType, setSelectedType] = useState('');
+  const [selectedSeverity, setSelectedSeverity] = useState('medium');
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -60,8 +72,59 @@ const ReportForm = ({ addIncident }) => {
     setTimeout(() => {
       setSubmitted(false);
       setPreviewImage(null);
+      setDescription('');
+      setSelectedType('');
+      setSelectedSeverity('medium');
       e.target.reset();
     }, 3000);
+  };
+
+  const toggleListening = () => {
+    if (!recognition) {
+      alert("Voice reporting is not supported in this browser. Please use Chrome.");
+      return;
+    }
+    if (isListening) {
+      recognition.stop();
+      setIsListening(false);
+    } else {
+      recognition.start();
+      setIsListening(true);
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        setDescription(prev => prev ? `${prev} ${transcript}` : transcript);
+        setIsListening(false);
+      };
+      recognition.onerror = () => {
+        setIsListening(false);
+        alert("Microphone access denied or error occurred.");
+      };
+      recognition.onend = () => setIsListening(false);
+    }
+  };
+
+  const handleAITriage = async () => {
+    if (!description) {
+      alert("Please enter or dictate a description first.");
+      return;
+    }
+    setIsAILoading(true);
+    try {
+      const res = await fetch('/api/triage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSelectedType(data.category);
+        setSelectedSeverity(data.severity);
+      }
+    } catch (e) {
+      console.error("AI Triage failed", e);
+    } finally {
+      setIsAILoading(false);
+    }
   };
 
   return (
@@ -106,11 +169,12 @@ const ReportForm = ({ addIncident }) => {
               <form className="report-form animate-fade-in" onSubmit={handleSubmit}>
                 <div className="form-group">
                   <label>Incident Type</label>
-                  <select name="type" className="form-control" required>
+                  <select name="type" className="form-control" value={selectedType} onChange={e => setSelectedType(e.target.value)} required>
                     <option value="">Select category...</option>
-                    <option value="animal">Animal Rescue</option>
-                    <option value="medical">Medical Emergency</option>
                     <option value="safety">Public Safety / Hazard</option>
+                    <option value="medical">Medical Emergency</option>
+                    <option value="fire">Fire Emergency</option>
+                    <option value="rescue">Animal Rescue</option>
                   </select>
                 </div>
 
@@ -155,23 +219,57 @@ const ReportForm = ({ addIncident }) => {
                   <label>Severity Level</label>
                   <div className="severity-options">
                     <label className="severity-radio">
-                      <input type="radio" name="severity" value="low" />
+                      <input type="radio" name="severity" value="low" checked={selectedSeverity === 'low'} onChange={() => setSelectedSeverity('low')} />
                       <span className="severity-label low">Low</span>
                     </label>
                     <label className="severity-radio">
-                      <input type="radio" name="severity" value="medium" defaultChecked />
+                      <input type="radio" name="severity" value="medium" checked={selectedSeverity === 'medium'} onChange={() => setSelectedSeverity('medium')} />
                       <span className="severity-label medium">Medium</span>
                     </label>
                     <label className="severity-radio">
-                      <input type="radio" name="severity" value="critical" />
+                      <input type="radio" name="severity" value="critical" checked={selectedSeverity === 'critical'} onChange={() => setSelectedSeverity('critical')} />
                       <span className="severity-label critical">Critical</span>
                     </label>
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label>Description</label>
-                  <textarea name="description" className="form-control" rows="3" placeholder="Briefly describe the situation..."></textarea>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                    <label style={{ margin: 0 }}>Description</label>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button 
+                        type="button" 
+                        onClick={toggleListening} 
+                        className={`btn-icon-small ${isListening ? 'listening' : ''}`}
+                        title="Voice Reporting"
+                      >
+                        {isListening ? <Mic className="pulse" size={16} color="#DC2626" /> : <MicOff size={16} color="#64748B" />}
+                        <span style={{ fontSize: '12px', marginLeft: '4px', color: isListening ? '#DC2626' : '#64748B' }}>
+                          {isListening ? 'Listening...' : 'Dictate'}
+                        </span>
+                      </button>
+                      <button 
+                        type="button" 
+                        onClick={handleAITriage} 
+                        className="btn-icon-small"
+                        disabled={isAILoading}
+                        title="AI Triage Auto-fill"
+                      >
+                        <Bot size={16} color="#0066FF" />
+                        <span style={{ fontSize: '12px', marginLeft: '4px', color: '#0066FF' }}>
+                          {isAILoading ? 'Analyzing...' : 'AI Triage'}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                  <textarea 
+                    name="description" 
+                    className="form-control" 
+                    rows="3" 
+                    placeholder="Briefly describe the situation..."
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  ></textarea>
                 </div>
 
                 <button type="submit" className="btn btn-primary btn-block">

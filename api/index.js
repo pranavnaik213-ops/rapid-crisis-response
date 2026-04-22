@@ -109,6 +109,68 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+// AI Triage Endpoint (Heuristic Mock)
+app.post('/api/triage', (req, res) => {
+  const { description } = req.body;
+  if (!description) return res.status(400).json({ error: 'Description required' });
+
+  const desc = description.toLowerCase();
+  let severity = 'low';
+  let category = 'safety';
+
+  // Keyword heuristic logic
+  if (desc.includes('fire') || desc.includes('smoke') || desc.includes('burn')) {
+    category = 'fire';
+    severity = 'critical';
+  } else if (desc.includes('blood') || desc.includes('heart') || desc.includes('breathe') || desc.includes('unconscious')) {
+    category = 'medical';
+    severity = 'critical';
+  } else if (desc.includes('accident') || desc.includes('crash') || desc.includes('hit')) {
+    category = 'medical';
+    severity = 'high';
+  } else if (desc.includes('gun') || desc.includes('knife') || desc.includes('shooter') || desc.includes('attack')) {
+    category = 'safety';
+    severity = 'critical';
+  } else if (desc.includes('dog') || desc.includes('cat') || desc.includes('animal') || desc.includes('stuck')) {
+    category = 'rescue';
+    severity = desc.includes('attack') ? 'high' : 'medium';
+  } else if (desc.includes('water') || desc.includes('flood') || desc.includes('leak')) {
+    category = 'safety';
+    severity = 'high';
+  }
+
+  // Add random delay to simulate AI processing time
+  setTimeout(() => {
+    res.json({ success: true, category, severity });
+  }, 1200);
+});
+
+// AI Chat Assistant Endpoint
+app.post('/api/chat', (req, res) => {
+  const { message } = req.body;
+  if (!message) return res.status(400).json({ error: 'Message required' });
+
+  const msg = message.toLowerCase();
+  let reply = "I am the Rapid Crisis Response AI Assistant. I can provide immediate first-aid instructions while you wait for responders. What is the emergency?";
+
+  if (msg.includes('cpr') || msg.includes('breathing') || msg.includes('heart')) {
+    reply = "CPR INSTRUCTIONS: 1. Place the heel of your hand on the center of the person's chest. 2. Place your other hand on top and interlock fingers. 3. Push hard and fast (100-120 pushes a minute) about 2 inches deep. 4. Do not stop until medical help arrives.";
+  } else if (msg.includes('burn') || msg.includes('fire')) {
+    reply = "BURN INSTRUCTIONS: 1. Cool the burn under cool (not cold) running water for at least 10 minutes. 2. Loosely cover the burn with cling film or a clean plastic bag. 3. Do NOT apply ice, creams, or gels.";
+  } else if (msg.includes('bleed') || msg.includes('cut')) {
+    reply = "SEVERE BLEEDING: 1. Apply direct, firm pressure to the wound with a clean cloth or bandage. 2. Keep the injured area elevated above the heart if possible. 3. Do not remove the cloth if it soaks through; add more on top.";
+  } else if (msg.includes('choking') || msg.includes('choke')) {
+    reply = "CHOKING (Heimlich Maneuver): 1. Stand behind the person. 2. Make a fist with one hand and place it slightly above their navel. 3. Grasp your fist with the other hand. 4. Perform 5 quick, upward abdominal thrusts.";
+  } else if (msg.includes('earthquake')) {
+    reply = "EARTHQUAKE: DROP to your hands and knees. COVER your head and neck under a sturdy table or desk. HOLD ON to your shelter until shaking stops. Stay away from windows.";
+  }
+
+  // Simulate typing delay
+  setTimeout(() => {
+    res.json({ success: true, reply });
+  }, 1000);
+});
+
 // Reports Endpoints
 app.get('/api/reports', async (req, res) => {
   try {

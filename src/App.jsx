@@ -15,6 +15,7 @@ import AdminDashboard from './components/AdminDashboard';
 import Navbar from './components/Navbar';
 import SOSButton from './components/SOSButton';
 import UserDashboard from './components/UserDashboard';
+import AIAssistant from './components/AIAssistant';
 import './App.css';
 
 function App() {
@@ -154,7 +155,7 @@ function App() {
               <h2>Emergency Actions</h2>
               <p>Quickly dispatch an SOS or submit a detailed incident report.</p>
             </div>
-            <SOSButton addIncident={addIncident} />
+            <SOSButton addIncident={addIncident} userEmail={userEmail} />
             <ReportForm addIncident={addIncident} />
             <UserDashboard incidents={incidents} userEmail={userEmail} />
           </>
@@ -169,6 +170,7 @@ function App() {
         <Network />
         <Footer />
       </div>
+      <AIAssistant />
     </div>
   );
 }
