@@ -70,7 +70,8 @@ function App() {
         alert(data.error || 'Failed to login. Please check credentials.');
       }
     } catch (err) {
-      alert('Could not connect to the backend server.');
+      console.error(err);
+      alert(`Could not connect to the backend server. Error: ${err.message}`);
     }
   };
 
@@ -90,7 +91,8 @@ function App() {
         alert(data.error || 'Failed to create account.');
       }
     } catch (err) {
-      alert('Could not connect to the backend server.');
+      console.error(err);
+      alert(`Could not connect to the backend server. Error: ${err.message}`);
     }
   };
 
